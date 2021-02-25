@@ -42,7 +42,7 @@ while hasMore:
     if hasMore:
       cursor = j['response_metadata']['next_cursor']
   else:
-    print('Error while fetching page {} with cursor {} and url {}'.format(page, cursor, url))
+    print('Error while fetching page {} with cursor {} and url {}. Error: {}'.format(page, cursor, url, j['error'] if 'error' in j else 'Unknown'))
 
   page += 1
 
@@ -72,7 +72,7 @@ for m in mainMessages:
       if hasMore:
         cursor = j['response_metadata']['next_cursor']
     else:
-      print('Error while fetched page {} with cursor {} and url {}'.format(page, cursor, url))
+      print('Error while fetching page {} with cursor {} and url {}. Error: {}'.format(page, cursor, url, j['error'] if 'error' in j else 'Unknown'))
 
   i += 1
   if i % 100 == 0:
