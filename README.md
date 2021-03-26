@@ -14,7 +14,7 @@ Example Slack channel history analyze with threads containing keywords such as A
 ## Requirements
 
 * Python 3.7+
-* sudo pip3 install -r requirements.txt
+* python3 -m pip install -r requirements.txt
 * Token from [a Slack Application](https://api.slack.com/apps) with `channels.history` scope.
   You can create the Slack Application to get this token, but then you need to install the App in the channel which you want to analyze.
 
