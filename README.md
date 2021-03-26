@@ -14,7 +14,7 @@ Example Slack channel history analyze with threads containing keywords such as A
 ## Requirements
 
 * Python 3.7+
-* pip3 install -p requirements.txt
+* sudo pip3 install -r requirements.txt
 * Token from [a Slack Application](https://api.slack.com/apps) with `channels.history` scope.
   You can create the Slack Application to get this token, but then you need to install the App in the channel which you want to analyze.
 
@@ -23,7 +23,7 @@ Example Slack channel history analyze with threads containing keywords such as A
 ### Fetch history
 
 ```bash
-python ./fetchHistory.py -token {token} -channel {channelID} 
+python3 ./fetchHistory.py -token {token} -channel {channelID} 
 ```
 Where:
 
@@ -34,7 +34,7 @@ Where:
 ### Analyze history
 
 ```bash
-python ./analyzeHistory.py -threads '[{"name": "Apple", "keywords": ["apple", "green"], "color": "#008000", "debug": false}, {"name": "Mango", "keywords": ["mango", "yellow"], "color": "#FF0000"}]'
+python3 ./analyzeHistory.py -threads '[{"name": "Apple", "keywords": ["apple", "green"], "color": "#008000", "debug": false}, {"name": "Mango", "keywords": ["mango", "yellow"], "color": "#FF0000"}]'
 ```
 `-threads` parameter is a JSON list in which every element has to have `name` and `keywords` fields.
 `name` is a thread name and `keywords` is a list of words which represent the thread.
