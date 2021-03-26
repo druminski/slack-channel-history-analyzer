@@ -1,4 +1,4 @@
-import json, collections, argparse
+import json, collections, argparse, math
 from datetime import datetime
 
 import numpy as np
@@ -50,7 +50,8 @@ def drawStackedBarPlot(allThreads, subThreads, title, xlabel, ylabel):
   for key, value in allThreads.items():
     r.append(index)
     index += 1
-    names.append("%.2f" % key)
+    month, year = math.modf(key)
+    names.append("%d/%d" % (round(month * 100), year))
     barHeighs.append(0)
   barWidth = 0.65
 
