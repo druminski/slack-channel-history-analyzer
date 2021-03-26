@@ -1,4 +1,4 @@
-import urllib2, json, time, argparse
+import urllib3, json, time, argparse
 
 parser = argparse.ArgumentParser(description='Fetch history of specified Slack channel.')
 
@@ -20,11 +20,12 @@ mergedJson = {
 page = 0
 
 def fetchMessages(url):
-  request = urllib2.Request(url)
-  request.add_header("Authorization", "Bearer " + token)
-  response = urllib2.urlopen(request)
-
-  return json.loads(response.read())
+  http = urllib3.PoolManager()
+  response = http.request('GET', url,
+                         headers = {
+                            "Authorization": "Bearer " + token
+                         })
+  return json.loads(response.data.decode('utf-8'))
 
 print('Fetching main thread')
 

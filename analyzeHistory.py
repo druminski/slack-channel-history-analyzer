@@ -47,7 +47,7 @@ def drawStackedBarPlot(allThreads, subThreads, title, xlabel, ylabel):
   names = []
   barHeighs = []
   index = 0
-  for key, value in allThreads.iteritems():
+  for key, value in allThreads.items():
     r.append(index)
     index += 1
     names.append("%.2f" % key)
@@ -60,7 +60,7 @@ def drawStackedBarPlot(allThreads, subThreads, title, xlabel, ylabel):
     for b in barHeighs:
       bottom.append(b)
     index = 0
-    for month, value in sub['threadsPerMonth'].iteritems():
+    for month, value in sub['threadsPerMonth'].items():
       bar.append(value)
       barHeighs[index] += value
       index += 1
@@ -68,7 +68,7 @@ def drawStackedBarPlot(allThreads, subThreads, title, xlabel, ylabel):
 
   bar = []
   index = 0
-  for month, value in allThreads.iteritems():
+  for month, value in allThreads.items():
     bar.append(value - barHeighs[index])
     index += 1
 
@@ -76,9 +76,9 @@ def drawStackedBarPlot(allThreads, subThreads, title, xlabel, ylabel):
  
   # Custom X & Y axis
   plt.xticks(r, names, fontweight='bold')
-  plt.title(title.decode('utf-8'))
-  plt.xlabel(xlabel.decode('utf-8'))
-  plt.ylabel(ylabel.decode('utf-8'))
+  plt.title(title)
+  plt.xlabel(xlabel)
+  plt.ylabel(ylabel)
    
   # Show graphic
   plt.legend()
