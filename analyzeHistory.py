@@ -120,7 +120,7 @@ def threadsWithKeywordsPerMonth(messages, keywords, debugMatched, debugUnmatched
       lastThread = m
       matchInThread = False
 
-    if not matchInThread and lastThread['ts'] != '' and 'text' in m and (('thread_ts' in m and m['ts'] == m['thread_ts'] and m['reply_users_count'] > 0) or ('thread_ts' in m and m['ts'] != m['thread_ts'])):
+    if not matchInThread and 'ts' in lastThread and lastThread['ts'] != '' and 'text' in m and (('thread_ts' in m and m['ts'] == m['thread_ts'] and m['reply_users_count'] > 0) or ('thread_ts' in m and m['ts'] != m['thread_ts'])):
       text = m['text'].lower().encode('utf-8')
       for w in keywords:
         if w in m['text']:
