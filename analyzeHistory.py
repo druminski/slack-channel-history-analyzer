@@ -12,6 +12,7 @@ parser.add_argument('--title', '-title', default='Number of issues/threads per m
 parser.add_argument('--xlabel', '-xlabel', default='Month', help='Chart x label (default: %(default)s).')
 parser.add_argument('--ylabel', '-ylabel', default='Number of threads', help='Chart y label (default: %(default)s).')
 parser.add_argument('--threads', '-threads', default=[], help='Threads config', type=json.loads)
+parser.add_argument('--printUnmatchedThreads', '-printUnmatchedThreads', default=False, help='Prints unmatched threads for sum of all configured keywords (default: %(default)).', action=argparse.BooleanOptionalAction)
 
 args = parser.parse_args()
 
@@ -19,6 +20,7 @@ input = args.input
 title = args.title
 xlabel = args.xlabel
 ylabel = args.ylabel
+printUnmatchedThreads = args.printUnmatchedThreads
 
 def validateThreads(threads):
   for t in threads:
@@ -40,7 +42,7 @@ def randomColor():
 def drawStackedBarPlot(allThreads, subThreads, title, xlabel, ylabel):
   # y-axis in bold
   rc('font', weight='bold')
- 
+
   # The position of the bars on the x-axis
   r = []
   # Names of x bars
@@ -73,14 +75,14 @@ def drawStackedBarPlot(allThreads, subThreads, title, xlabel, ylabel):
     bar.append(value - barHeighs[index])
     index += 1
 
-  plt.bar(r, bar, bottom=barHeighs, color='#800080', edgecolor='white', width=barWidth, label='Other') 
- 
+  plt.bar(r, bar, bottom=barHeighs, color='#800080', edgecolor='white', width=barWidth, label='Other')
+
   # Custom X & Y axis
   plt.xticks(r, names, fontweight='bold')
   plt.title(title)
   plt.xlabel(xlabel)
   plt.ylabel(ylabel)
-   
+
   # Show graphic
   plt.legend()
   plt.show()
@@ -97,8 +99,8 @@ def prettyTS(ts):
 
 print('Number of all messages: {}'.format(len(messages)))
 
-def threadsWithKeywordsPerMonth(messages, keywords, debug):
-  lastThread = ''
+def threadsWithKeywordsPerMonth(messages, keywords, debugMatched, debugUnmatched):
+  lastThread = {}
   matchInThread = 0
   threadsPerMonth = {}
 
@@ -109,28 +111,35 @@ def threadsWithKeywordsPerMonth(messages, keywords, debug):
     # init month with 0 value
     if counter == 0:
       threadsPerMonth[key] = counter
-   
+
     if 'thread_ts' in m and m['ts'] == m['thread_ts'] and m['reply_users_count'] > 0:
-      if matchInThread and lastThread != '':
+      if matchInThread and lastThread['ts'] != '':
         threadsPerMonth[key] = counter + 1
-      lastThread = m['ts']
+      elif debugUnmatched and 'text' in lastThread:
+        print('Unmatched thread: {}'.format(lastThread['text']))
+      lastThread = m
       matchInThread = False
 
-    if not matchInThread and lastThread != '' and 'text' in m and (('thread_ts' in m and m['ts'] == m['thread_ts'] and m['reply_users_count'] > 0) or ('thread_ts' in m and m['ts'] != m['thread_ts'])):
+    if not matchInThread and lastThread['ts'] != '' and 'text' in m and (('thread_ts' in m and m['ts'] == m['thread_ts'] and m['reply_users_count'] > 0) or ('thread_ts' in m and m['ts'] != m['thread_ts'])):
       text = m['text'].lower().encode('utf-8')
       for w in keywords:
         if w in m['text']:
           matchInThread = True
-          if debug:
+          if debugMatched:
             print('Found \'{}\' keyword in: {}'.format(w, text))
           break
   return collections.OrderedDict(sorted(threadsPerMonth.items()))
 
-allThreads = threadsWithKeywordsPerMonth(messages, [' '], False)
+allThreads = threadsWithKeywordsPerMonth(messages, [' '], False, False)
 
 subThreads = validateThreads(args.threads)
+allKeywords = []
 for subThread in subThreads:
-  subThread['threadsPerMonth'] = threadsWithKeywordsPerMonth(messages, subThread['keywords'], subThread['debug'])
+  subThread['threadsPerMonth'] = threadsWithKeywordsPerMonth(messages, subThread['keywords'], subThread['debug'], False)
+  allKeywords.extend(subThread['keywords'])
+
+if printUnmatchedThreads:
+  threadsWithKeywordsPerMonth(messages, allKeywords, False, printUnmatchedThreads)
 
 drawStackedBarPlot(allThreads, subThreads, title, xlabel, ylabel)
 

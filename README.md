@@ -34,7 +34,7 @@ Where:
 ### Analyze history
 
 ```bash
-python3 ./analyzeHistory.py -threads '[{"name": "Apple", "keywords": ["apple", "green"], "color": "#008000", "debug": false}, {"name": "Mango", "keywords": ["mango", "yellow"], "color": "#FF0000"}]'
+python3 ./analyzeHistory.py -threads '[{"name": "Apple", "keywords": ["apple", "green"], "color": "#008000", "debug": false}, {"name": "Mango", "keywords": ["mango", "yellow"], "color": "#FF0000"}]' -printUnmatchedThreads
 ```
 `-threads` parameter is a JSON list in which every element has to have `name` and `keywords` fields.
 `name` is a thread name and `keywords` is a list of words which represent the thread.
