@@ -123,7 +123,7 @@ def threadsWithKeywordsPerMonth(messages, keywords, debugMatched, debugUnmatched
     if not matchInThread and 'ts' in lastThread and lastThread['ts'] != '' and 'text' in m and (('thread_ts' in m and m['ts'] == m['thread_ts'] and m['reply_users_count'] > 0) or ('thread_ts' in m and m['ts'] != m['thread_ts'])):
       text = m['text'].lower().encode('utf-8')
       for w in keywords:
-        if w in m['text']:
+        if w.lower() in m['text'].lower():
           matchInThread = True
           if debugMatched:
             print('Found \'{}\' keyword in: {}'.format(w, text))
