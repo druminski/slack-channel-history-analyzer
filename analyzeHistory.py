@@ -72,7 +72,8 @@ def drawStackedBarPlot(allThreads, subThreads, title, xlabel, ylabel):
   bar = []
   index = 0
   for month, value in allThreads.items():
-    bar.append(value - barHeighs[index])
+    positivevalue = value - barHeighs[index] if value - barHeighs[index] > 0 else 0
+    bar.append(positivevalue)
     index += 1
 
   plt.bar(r, bar, bottom=barHeighs, color='#800080', edgecolor='white', width=barWidth, label='Other')
@@ -126,7 +127,7 @@ def threadsWithKeywordsPerMonth(messages, keywords, debugMatched, debugUnmatched
     if not matchInThread and 'ts' in lastThread and lastThread['ts'] != '' and 'text' in m and (('thread_ts' in m and m['ts'] == m['thread_ts'] and m['reply_users_count'] > 0) or ('thread_ts' in m and m['ts'] != m['thread_ts'])):
       text = prepareMessage(m['text'])
       for w in keywords:
-        if w.lower() in text:
+        if prepareMessage(w) in text:
           matchInThread = True
           if debugMatched:
             print('Found \'{}\' keyword ({}): {}'.format(w, tsToDate(m['ts']), text))
