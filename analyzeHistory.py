@@ -99,6 +99,9 @@ def prettyTS(ts):
 
 print('Number of all messages: {}'.format(len(messages)))
 
+def prepareMessage(m):
+  return m.replace('-', '').lower()
+
 def threadsWithKeywordsPerMonth(messages, keywords, debugMatched, debugUnmatched):
   lastThread = {}
   matchInThread = 0
@@ -116,17 +119,17 @@ def threadsWithKeywordsPerMonth(messages, keywords, debugMatched, debugUnmatched
       if matchInThread and lastThread['ts'] != '':
         threadsPerMonth[key] = counter + 1
       elif debugUnmatched and 'text' in lastThread:
-        print('Unmatched thread: {}'.format(lastThread['text']))
+        print('Unmatched thread ({}): {}'.format(tsToDate(lastThread['ts']), lastThread['text']))
       lastThread = m
       matchInThread = False
 
     if not matchInThread and 'ts' in lastThread and lastThread['ts'] != '' and 'text' in m and (('thread_ts' in m and m['ts'] == m['thread_ts'] and m['reply_users_count'] > 0) or ('thread_ts' in m and m['ts'] != m['thread_ts'])):
-      text = m['text'].lower().encode('utf-8')
+      text = prepareMessage(m['text'])
       for w in keywords:
-        if w.lower() in m['text'].lower():
+        if w.lower() in text:
           matchInThread = True
           if debugMatched:
-            print('Found \'{}\' keyword in: {}'.format(w, text))
+            print('Found \'{}\' keyword ({}): {}'.format(w, tsToDate(m['ts']), text))
           break
   return collections.OrderedDict(sorted(threadsPerMonth.items()))
 
