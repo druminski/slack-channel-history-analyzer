@@ -101,7 +101,7 @@ def prettyTS(ts):
 print('Number of all messages: {}'.format(len(messages)))
 
 def prepareMessage(m):
-  return m.replace('-', '').lower()
+  return m.replace('-', '').replace('\n', '/n').lower()
 
 def threadsWithKeywordsPerMonth(messages, keywords, debugMatched, debugUnmatched):
   lastThread = {}
@@ -130,7 +130,7 @@ def threadsWithKeywordsPerMonth(messages, keywords, debugMatched, debugUnmatched
         if prepareMessage(w) in text:
           matchInThread = True
           if debugMatched:
-            print('Found \'{}\' keyword ({}): {}'.format(w, tsToDate(m['ts']), text))
+            print('{} § {} § {}'.format(w, tsToDate(m['ts']), text))
           break
   return collections.OrderedDict(sorted(threadsPerMonth.items()))
 
